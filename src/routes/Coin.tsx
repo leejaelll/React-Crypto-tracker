@@ -4,11 +4,13 @@ import {
     Outlet,
     Link,
     useMatch,
+    useNavigate,
 } from "react-router-dom";
 // import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { Helmet } from "react-helmet";
 
 interface LocationParams {
     state: string;
@@ -80,12 +82,18 @@ function Coin() {
         () => fetchCoinInfo(coinId!)
     );
     const { isLoading: tickersLoading, data: tickersData } =
-        useQuery<PriceData>(["tickers", coinId], () =>
-            fetchCoinTickers(coinId!)
+        useQuery<PriceData>(
+            ["tickers", coinId],
+            () => fetchCoinTickers(coinId!),
+            {
+                refetchInterval: 10000,
+            }
         );
 
     const chartMatch = useMatch("/:coinId/chart");
     const priceMatch = useMatch("/:coinId/price");
+
+    const navigate = useNavigate();
 
     // useEffect(() => {
     //     async function fetchData() {
@@ -108,7 +116,24 @@ function Coin() {
 
     return (
         <Container>
+            <Helmet>
+                <title>
+                    {state ? state : loading ? "Loading..." : infoData?.name}
+                </title>
+            </Helmet>
             <Header>
+                <button
+                    style={{
+                        margin: 10,
+                        background: "transparent",
+                        border: "none",
+                        fontSize: 50,
+                        cursor: "pointer",
+                    }}
+                    onClick={() => navigate("/")}
+                >
+                    🏠
+                </button>
                 <Title>
                     당신의 코인코인 <br />
                     {state ? state : loading ? "Loading..." : infoData?.name}
@@ -128,8 +153,10 @@ function Coin() {
                             <span>${infoData?.symbol}</span>
                         </OverviewItem>
                         <OverviewItem>
-                            <span>Open Source:</span>
-                            <span>{infoData?.open_source ? "Yes" : "No"}</span>
+                            <span>Price:</span>
+                            <span>
+                                ${tickersData?.quotes.USD.price.toFixed(3)}
+                            </span>
                         </OverviewItem>
                     </Overview>
                     <Description>{infoData?.description}</Description>
