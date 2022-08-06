@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 interface CoinInterface {
     id: string;
@@ -32,6 +34,8 @@ function CoinList() {
     //     fetchData();
     // }, []);
 
+    const isDark = useRecoilValue(isDarkAtom);
+    const setterFn = useSetRecoilState(isDarkAtom); // function -> Set the value
     const { isLoading, data } = useQuery<CoinInterface[]>(
         ["allCoins"],
         fetchCoins
@@ -44,6 +48,9 @@ function CoinList() {
             </Helmet>
             <Header>
                 <Title>코인코인 리스트 </Title>
+                <Button onClick={() => setterFn((current) => !current)}>
+                    {isDark ? "🌞" : "🌗"}
+                </Button>
             </Header>
             {isLoading ? (
                 <Loader>Loading...</Loader>
@@ -105,6 +112,14 @@ const Img = styled.img`
     width: 35px;
     height: 35px;
     margin-right: 10px;
+`;
+
+const Button = styled.button`
+    margin: 10px;
+    background: transparent;
+    border: none;
+    font-size: 50px;
+    cursor: pointer;
 `;
 
 export default CoinList;

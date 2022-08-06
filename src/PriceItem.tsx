@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const ItemBox = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    background-color: ${(props) => props.theme.btnColor};
+    background-color: ${(props) => props.theme.boxColor};
 `;
 
 const Item = styled.div`

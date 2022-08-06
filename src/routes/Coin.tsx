@@ -122,18 +122,7 @@ function Coin() {
                 </title>
             </Helmet>
             <Header>
-                <button
-                    style={{
-                        margin: 10,
-                        background: "transparent",
-                        border: "none",
-                        fontSize: 50,
-                        cursor: "pointer",
-                    }}
-                    onClick={() => navigate("/")}
-                >
-                    🏠
-                </button>
+                <Button onClick={() => navigate("/")}>🏠</Button>
                 <Title>
                     당신의 코인코인 <br />
                     {state ? state : loading ? "Loading..." : infoData?.name}
@@ -209,7 +198,7 @@ const Loader = styled.span`
 const Overview = styled.div`
     display: flex;
     justify-content: space-between;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: ${(props) => props.theme.boxColor};
     padding: 10px 20px;
     border-radius: 10px;
 `;
@@ -239,7 +228,7 @@ const Tab = styled.span<{ isActive: boolean }>`
     text-transform: uppercase;
     font-size: 12px;
     font-weight: 400;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: ${(props) => props.theme.boxColor};
     padding: 7px 0px;
     border-radius: 10px;
     color: ${(props) =>
@@ -247,6 +236,13 @@ const Tab = styled.span<{ isActive: boolean }>`
     a {
         display: block;
     }
+`;
+const Button = styled.button`
+    margin: 10px;
+    background: transparent;
+    border: none;
+    font-size: 50px;
+    cursor: pointer;
 `;
 
 export default Coin;
