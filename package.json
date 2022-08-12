@@ -12,6 +12,7 @@
         "@types/react": "^18.0.15",
         "@types/react-dom": "^18.0.6",
         "apexcharts": "^3.35.4",
+        "gh-pages": "^4.0.0",
         "react": "^18.2.0",
         "react-apexcharts": "^1.4.0",
         "react-dom": "^18.2.0",
@@ -27,9 +28,10 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "deploy": "gh-pages -d build",
+        "predeploy": "npm run build"
     },
+    "homepage": "https://leejaelll.github.io/React-Crypto-tracker",
     "eslintConfig": {
         "extends": [
             "react-app",

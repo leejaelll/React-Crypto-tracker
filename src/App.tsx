@@ -18,7 +18,7 @@ function App() {
         <>
             <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
                 <GlobalStyle />
-                <BrowserRouter>
+                <BrowserRouter basename={`${process.env.PUBLIC_URL}`}>
                     <Routes>
                         <Route path="/" element={<CoinList />}></Route>
                         <Route path=":coinId" element={<Coin />}>
