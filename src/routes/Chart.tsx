@@ -1,10 +1,7 @@
-import { useOutletContext } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCoinHistory } from "../api";
+import { useOutletContext } from "react-router-dom";
 import ApexChart from "react-apexcharts";
-import { useRecoilValue } from "recoil";
-import { isDarkAtom } from "../atoms";
-// import { ApexOptions } from "apexcharts";
+import { fetchCoinHistory } from "../api";
 
 interface IHistorical {
     close: number;
@@ -18,66 +15,49 @@ interface IHistorical {
 }
 
 function Chart() {
-    const isDark = useRecoilValue(isDarkAtom);
     const coinId = useOutletContext<string>();
-    const { isLoading, data } = useQuery<IHistorical[]>(
-        ["ohlcv", coinId],
-        () => fetchCoinHistory(coinId),
-        { refetchInterval: 20000 }
+    const { isLoading, data } = useQuery<IHistorical[]>(["ohlvc"], () =>
+        fetchCoinHistory(coinId!)
     );
 
     return (
         <div>
             {isLoading ? (
-                "Chart Loading..."
+                "loading..."
             ) : (
                 <ApexChart
-                    type="line"
                     series={[
                         {
-                            name: "Price",
-                            data: data?.map((price) => price.close) ?? [],
+                            data:
+                                data?.map((price) => {
+                                    return {
+                                        x: price.time_close,
+                                        y: [
+                                            price.open.toFixed(2),
+                                            price.high.toFixed(2),
+                                            price.low.toFixed(2),
+                                            price.close.toFixed(2),
+                                        ],
+                                    };
+                                }) ?? [],
                         },
                     ]}
+                    type="candlestick"
                     options={{
                         theme: {
-                            mode: isDark ? "dark" : "light",
+                            mode: "dark",
                         },
                         chart: {
-                            height: 300,
+                            height: 500,
                             width: 500,
                             toolbar: {
-                                show: true,
+                                show: false,
                             },
                             background: "transparent",
                         },
                         grid: { show: false },
-                        stroke: {
-                            curve: "smooth",
-                            width: 3,
-                        },
-                        yaxis: {
-                            show: false,
-                        },
                         xaxis: {
-                            axisBorder: { show: false },
-                            axisTicks: { show: true },
-                            labels: { show: true },
                             type: "datetime",
-                            categories: data?.map((date) => date.time_close),
-                        },
-                        fill: {
-                            type: "gradient",
-                            gradient: {
-                                gradientToColors: ["#0be881"],
-                                stops: [0, 100],
-                            },
-                        },
-                        colors: ["#0fbcf9"],
-                        tooltip: {
-                            y: {
-                                formatter: (value) => `$${value.toFixed(4)}`,
-                            },
                         },
                     }}
                 />
